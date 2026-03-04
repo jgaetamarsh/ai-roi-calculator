@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Delegation + Task ROI Calculator</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: #f2f2f2;
+      color: #111;
+      margin: 0;
+      padding: 24px 12px;
+    }
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 22px;
+      border-radius: 12px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+      border: 2px solid #031E55;
+    }
+    h1, h2 {
+      margin: 0 0 12px 0;
+      color: #031E55;
+    }
+    .sub {
+      margin: 0 0 18px 0;
+      color: #333;
+      line-height: 1.4;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      border: 1px solid #e6e6e6;
+      border-radius: 12px;
+      padding: 16px;
+      background: #fafafa;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 6px 0;
+      font-size: 14px;
+      color: #222;
+      font-weight: 600;
+    }
+    input[type="number"], input[type="text"], select, textarea {
+      width: 100%;
+      padding: 10px 10px;
+      border: 1px solid #cfcfcf;
+      border-radius: 8px;
+      font-size: 14px;
+      box-sizing: border-box;
+      background: #fff;
+    }
+    textarea {
+      min-height: 70px;
+      resize: vertical;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 560px) {
+      .row { grid-template-columns: 1fr; }
+    }
+
+    .btnbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    button {
+      padding: 10px 14px;
+      background: #031E55;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+    button:hover { background: #00203d; }
+    button.secondary {
+      background: #e9eefc;
+      color: #031E55;
+      border: 1px solid #b8c6ff;
+    }
+    button.secondary:hover { background: #dde6ff; }
+
+    .sliderwrap {
+      display: grid;
+      grid-template-columns: 1fr 120px;
+      gap: 12px;
+      align-items: center;
+    }
+    input[type="range"] { width: 100%; }
+    .pill {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.4px;
+      border: 1px solid #ddd;
+      background: #fff;
+      color: #111;
+      text-transform: uppercase;
+    }
+    .pill.automate { border-color: #b6f0c2; background: #eaffef; color: #0d5e1c; }
+    .pill.assist   { border-color: #c7ddff; background: #edf4ff; color: #0b3a7a; }
+    .pill.augment  { border-color: #ffe2b8; background: #fff6e9; color: #7a3f00; }
+    .pill.preserve { border-color: #ffc1c1; background: #fff0f0; color: #7a0b0b; }
+
+    .outputs input[type="text"], .outputs textarea {
+      background: #fff;
+    }
+
+    .kpi {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    @media (max-width: 560px) {
+      .kpi { grid-template-columns: 1fr; }
+    }
+    .kpi .box {
+      background: #fff;
+      border: 1px solid #e6e6e6;
+      border-radius: 10px;
+      padding: 12px;
+    }
+    .kpi .box .label {
+      font-size: 12px;
+      color: #666;
+      font-weight: 700;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .kpi .box .val {
+      font-size: 18px;
+      font-weight: 900;
+      color: #111;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>AI Delegation + Task ROI Calculator</h1>
+    <p class="sub">
+      Use this to help decide whether it’s worth changing a process and whether the right move is to <b>Automate</b>, <b>Assist</b>, <b>Augment</b>, or <b>Preserve</b> the human work. For directional purposes only.
+    </p>
+
+    <div class="grid">
+      <div class="card">
+        <h2>1) Time + Cost</h2>
+
+        <div class="row">
+          <div>
+            <label for="timesPer">How many times does the task happen per interval?</label>
+            <input type="number" id="timesPer" min="0" step="1" value="0" />
+          </div>
+          <div>
+            <label for="frequency">Interval</label>
+            <select id="frequency">
+              <option value="day">Day</option>
+              <option value="week" selected>Week</option>
+              <option value="month">Month</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="minsPerTask">Minutes per task (current)</label>
+            <input type="number" id="minsPerTask" min="0" step="0.1" value="0" />
+          </div>
+          <div>
+            <label for="newMinsPerTask">Minutes per task (after change)</label>
+            <input type="number" id="newMinsPerTask" min="0" step="0.1" value="0" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="numEmployees">How many people do this task?</label>
+            <input type="number" id="numEmployees" min="0" step="1" value="0" />
+          </div>
+          <div>
+            <label for="workingWeeks">Working weeks per year</label>
+            <input type="number" id="workingWeeks" min="0" step="1" value="0" />
+          </div>
+        </div>
+
+        <label for="salaryType">Compensation input type</label>
+        <select id="salaryType">
+          <option value="yearly" selected>Yearly salary</option>
+          <option value="hourly">Hourly rate</option>
+        </select>
+
+        <label for="avgSalaryRate">Average salary or hourly rate</label>
+        <input type="number" id="avgSalaryRate" min="0" step="0.01" value="0" />
+
+        <div class="row">
+          <div>
+            <label for="softwareLicenseCost">Tool cost per seat per year</label>
+            <input type="number" id="softwareLicenseCost" min="0" step="0.01" value="0" />
+          </div>
+          <div>
+            <label for="numSeats">Number of seats</label>
+            <input type="number" id="numSeats" min="0" step="1" value="0" />
+          </div>
+        </div>
+
+        <label for="oneTimeBuildCost">One-time build cost</label>
+        <input type="number" id="oneTimeBuildCost" min="0" step="0.01" value="0" />
+
+        <div class="btnbar">
+          <button type="button" id="calcBtn">Calculate</button>
+          <button type="button" class="secondary" id="resetBtn">Reset</button>
+        </div>
+
+        <div class="kpi">
+          <div class="box">
+            <div class="label">Current yearly cost</div>
+            <div class="val" id="kpiCurrent">$0</div>
+          </div>
+          <div class="box">
+            <div class="label">New yearly cost (labor + tool)</div>
+            <div class="val" id="kpiNew">$0</div>
+          </div>
+          <div class="box">
+            <div class="label">Yearly savings</div>
+            <div class="val" id="kpiSavings">$0</div>
+          </div>
+          <div class="box">
+            <div class="label">Time saved / year</div>
+            <div class="val" id="kpiTime">0 mins</div>
+          </div>
+        </div>
+
+        <div class="kpi">
+          <div class="box">
+            <div class="label">Additional tasks enabled / year</div>
+            <div class="val" id="kpiMore">0</div>
+          </div>
+          <div class="box">
+            <div class="label">Payback (one-time build)</div>
+            <div class="val" id="kpiPayback">N/A</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card outputs">
+        <h2>2) Delegation Recommendation</h2>
+
+        <label for="taskName">Task name</label>
+        <input type="text" id="taskName" placeholder="e.g., Client intake triage" />
+
+        <label for="taskNotes">Task description</label>
+        <textarea id="taskNotes" placeholder="What is the task? What output do you need? Where do mistakes hurt?"></textarea>
+
+        <label>Repetition (0–5)</label>
+        <div class="sliderwrap">
+          <input type="range" id="sRepetition" min="0" max="5" step="1" value="0" />
+          <input type="number" id="nRepetition" min="0" max="5" step="1" value="0" />
+        </div>
+
+        <label>Risk of mistake (0–5)</label>
+        <div class="sliderwrap">
+          <input type="range" id="sRisk" min="0" max="5" step="1" value="0" />
+          <input type="number" id="nRisk" min="0" max="5" step="1" value="0" />
+        </div>
+
+        <label>Human differentiation value (0–5)</label>
+        <div class="sliderwrap">
+          <input type="range" id="sHuman" min="0" max="5" step="1" value="0" />
+          <input type="number" id="nHuman" min="0" max="5" step="1" value="0" />
+        </div>
+
+        <label>Context complexity (0–5)</label>
+        <div class="sliderwrap">
+          <input type="range" id="sContext" min="0" max="5" step="1" value="0" />
+          <input type="number" id="nContext" min="0" max="5" step="1" value="0" />
+        </div>
+
+        <div style="margin-top: 12px;">
+          <span style="color:#555;font-size:13px;">Recommendation</span><br />
+          <span id="recPill" class="pill assist">ASSIST</span>
+        </div>
+
+        <label for="why">Why</label>
+        <textarea id="why" readonly></textarea>
+
+        <label for="aiUse">Suggested AI use</label>
+        <textarea id="aiUse" readonly></textarea>
+
+        <label for="humanOwns">What the human must own</label>
+        <textarea id="humanOwns" readonly></textarea>
+
+        <div class="btnbar">
+          <button type="button" class="secondary" id="copySummaryBtn">Copy summary</button>
+        </div>
+
+        <div style="margin-top:14px;color:#666;font-size:12px;line-height:1.4;">
+          “Automate” means the machine executes the task with minimal human review. “Assist/Augment” means the human owns the decision and output. “Preserve” means the work stays human.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function money(n) {
+      const x = Number.isFinite(n) ? n : 0;
+      return x.toLocaleString(undefined, { style: "currency", currency: "USD" });
+    }
+    function clamp(n, min, max) {
+      return Math.max(min, Math.min(max, n));
+    }
+    function safeNum(id, fallback = 0) {
+      const v = parseFloat(document.getElementById(id).value);
+      return Number.isFinite(v) ? v : fallback;
+    }
+
+    function tasksPerYear(timesPer, frequency, workingWeeks) {
+      const workDaysPerWeek = 5;
+      if (frequency === "day") return timesPer * workDaysPerWeek * workingWeeks;
+      if (frequency === "week") return timesPer * workingWeeks;
+      if (frequency === "month") return timesPer * 12;
+      return timesPer * workingWeeks;
+    }
+
+    function recommendDelegation(rep, risk, human, ctx) {
+      if (human >= 4 && risk >= 3) {
+        return {
+          key: "preserve",
+          label: "PRESERVE",
+          why:
+            "This work has high human value and meaningful risk. Automating it would likely damage trust or create expensive errors. If you change anything, keep the human firmly in control.",
+          aiUse:
+            "Use AI for prep work: summarizing inputs, formatting drafts, creating checklists, extracting key fields, and surfacing what to review.",
+          humanOwns:
+            "Final decisions, client-facing language, exceptions, and anything that relies on judgment, nuance, or relationship management."
+        };
+      }
+
+      if (rep >= 4 && risk <= 2 && ctx <= 2 && human <= 2) {
+        return {
+          key: "automate",
+          label: "AUTOMATE",
+          why:
+            "This task is repetitive and predictable with low risk. It doesn’t depend on deep context or human experience. That’s what automation is for.",
+          aiUse:
+            "Automate classification, routing, extraction, and generating the standard output. Include monitoring and an escalation path for edge cases.",
+          humanOwns:
+            "Spot checks, handling escalations/edge cases, and updating rules when the workflow changes."
+        };
+      }
+
+      if ((rep >= 3 && ctx >= 3) || (risk >= 3 && rep >= 3) || (human >= 3 && rep >= 3)) {
+        return {
+          key: "assist",
+          label: "ASSIST",
+          why:
+            "There’s real value in using AI here, but context and/or risk means you don’t want the machine driving. AI should support the human, not replace them.",
+          aiUse:
+            "Draft first-pass outputs, summarize inputs, propose classifications, suggest next steps, and generate templates. Require human approval before anything goes out.",
+          humanOwns:
+            "Approval, exceptions, final wording, and any decision that impacts customers, money, or reputation."
+        };
+      }
+
+      return {
+        key: "augment",
+        label: "AUGMENT",
+        why:
+          "This is a good candidate for partial automation: let AI handle the boring parts and keep a human review loop where judgment matters.",
+        aiUse:
+          "Automate portions like drafting, extraction, tagging, and checklist generation. Route uncertain cases to humans and track rework.",
+        humanOwns:
+          "Quality control, final outputs, and handling cases that don’t match the normal pattern."
+      };
+    }
+
+    function setPill(recKey, label) {
+      const pill = document.getElementById("recPill");
+      pill.textContent = label;
+      pill.className = "pill " + recKey;
+    }
+
+    function setSlider(kind, val) {
+      const sId = "s" + kind;
+      const nId = "n" + kind;
+      document.getElementById(sId).value = val;
+      document.getElementById(nId).value = val;
+    }
+
+    function wireSlider(kind) {
+      const sId = "s" + kind;
+      const nId = "n" + kind;
+
+      const s = document.getElementById(sId);
+      const n = document.getElementById(nId);
+
+      s.addEventListener("input", () => {
+        n.value = s.value;
+        calculateDelegation();
+      });
+      n.addEventListener("input", () => {
+        const v = clamp(parseInt(n.value || "0", 10), 0, 5);
+        n.value = v;
+        s.value = v;
+        calculateDelegation();
+      });
+    }
+
+    function calcMinuteRate(salaryType, avgSalaryOrRate, workingWeeks) {
+      if (salaryType === "hourly") {
+        const hourly = Math.max(0, avgSalaryOrRate);
+        return hourly / 60;
+      }
+      const yearly = Math.max(0, avgSalaryOrRate);
+      const totalHours = 40 * Math.max(1, workingWeeks);
+      const totalMinutes = totalHours * 60;
+      return yearly / totalMinutes;
+    }
+
+    function calculateROI() {
+      const timesPer = safeNum("timesPer", 0);
+      const frequency = document.getElementById("frequency").value;
+      const mins = safeNum("minsPerTask", 0);
+      const newMins = safeNum("newMinsPerTask", mins);
+      const employees = safeNum("numEmployees", 0);
+
+      const workingWeeks = safeNum("workingWeeks", 0);
+
+      const salaryType = document.getElementById("salaryType").value;
+      const avgSalaryRate = safeNum("avgSalaryRate", 0);
+
+      const seatCost = safeNum("softwareLicenseCost", 0);
+      const seats = safeNum("numSeats", 0);
+      const oneTimeBuild = safeNum("oneTimeBuildCost", 0);
+
+      const tpy = tasksPerYear(timesPer, frequency, workingWeeks);
+      const minuteRate = calcMinuteRate(salaryType, avgSalaryRate, workingWeeks);
+
+      const currentMinutes = tpy * mins * employees;
+      const newMinutes = tpy * newMins * employees;
+
+      const currentLaborCost = currentMinutes * minuteRate;
+      const newLaborCost = newMinutes * minuteRate;
+
+      const toolCost = seatCost * seats;
+      const newTotalYearlyCost = newLaborCost + toolCost;
+
+      const savings = currentLaborCost - newTotalYearlyCost;
+      const timeSaved = currentMinutes - newMinutes;
+
+      const additionalTasks = (newMins > 0) ? Math.floor(Math.max(0, timeSaved) / newMins) : 0;
+
+      let payback = "N/A";
+      if (oneTimeBuild > 0 && savings > 0) {
+        const years = oneTimeBuild / savings;
+        if (Number.isFinite(years)) {
+          payback = years < 1 ? `${(years * 12).toFixed(1)} months` : `${years.toFixed(2)} years`;
+        }
+      }
+
+      document.getElementById("kpiCurrent").textContent = money(currentLaborCost);
+      document.getElementById("kpiNew").textContent = money(newTotalYearlyCost);
+      document.getElementById("kpiSavings").textContent = money(savings);
+      document.getElementById("kpiTime").textContent = `${timeSaved.toFixed(0).toLocaleString()} mins`;
+      document.getElementById("kpiMore").textContent = additionalTasks.toLocaleString();
+      document.getElementById("kpiPayback").textContent = payback;
+
+      return { currentLaborCost, newTotalYearlyCost, savings, timeSaved, additionalTasks };
+    }
+
+    function calculateDelegation() {
+      const rep = safeNum("nRepetition", 0);
+      const risk = safeNum("nRisk", 0);
+      const human = safeNum("nHuman", 0);
+      const ctx = safeNum("nContext", 0);
+
+      const rec = recommendDelegation(rep, risk, human, ctx);
+      setPill(rec.key, rec.label);
+
+      document.getElementById("why").value = rec.why;
+      document.getElementById("aiUse").value = rec.aiUse;
+      document.getElementById("humanOwns").value = rec.humanOwns;
+
+      return rec;
+    }
+
+    function calculateAll() {
+      calculateROI();
+      calculateDelegation();
+    }
+
+    function buildSummaryText() {
+      const taskName = (document.getElementById("taskName").value || "This task").trim();
+      const taskNotes = (document.getElementById("taskNotes").value || "").trim();
+
+      const rep = safeNum("nRepetition", 0);
+      const risk = safeNum("nRisk", 0);
+      const human = safeNum("nHuman", 0);
+      const ctx = safeNum("nContext", 0);
+
+      const roi = calculateROI();
+      const rec = calculateDelegation();
+
+      const summaryLines = [];
+      summaryLines.push(`${taskName}: ${rec.label}.`);
+      summaryLines.push(`Scores (0–5): repetition ${rep}, risk ${risk}, human value ${human}, context ${ctx}.`);
+      summaryLines.push(`Impact: current yearly cost ${money(roi.currentLaborCost)} → new yearly cost ${money(roi.newTotalYearlyCost)}. Estimated savings: ${money(roi.savings)}. Time saved: ${roi.timeSaved.toFixed(0).toLocaleString()} minutes/year.`);
+      summaryLines.push(`Why: ${rec.why}`);
+      summaryLines.push(`AI should: ${rec.aiUse}`);
+      summaryLines.push(`Human owns: ${rec.humanOwns}`);
+      if (taskNotes) summaryLines.push(`Notes: ${taskNotes}`);
+
+      return summaryLines.join("\n\n");
+    }
+
+    async function copyToClipboard(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        alert("Copied.");
+      } catch {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        alert("Copied.");
+      }
+    }
+
+    function resetAll() {
+      document.getElementById("timesPer").value = 0;
+      document.getElementById("frequency").value = "week";
+      document.getElementById("minsPerTask").value = 0;
+      document.getElementById("newMinsPerTask").value = 0;
+      document.getElementById("numEmployees").value = 0;
+      document.getElementById("workingWeeks").value = 0;
+      document.getElementById("salaryType").value = "yearly";
+      document.getElementById("avgSalaryRate").value = 0;
+      document.getElementById("softwareLicenseCost").value = 0;
+      document.getElementById("numSeats").value = 0;
+      document.getElementById("oneTimeBuildCost").value = 0;
+
+      document.getElementById("taskName").value = "";
+      document.getElementById("taskNotes").value = "";
+
+      setSlider("Repetition", 0);
+      setSlider("Risk", 0);
+      setSlider("Human", 0);
+      setSlider("Context", 0);
+
+      calculateAll();
+    }
+
+    document.getElementById("calcBtn").addEventListener("click", calculateAll);
+    document.getElementById("resetBtn").addEventListener("click", resetAll);
+
+    [
+      "timesPer","frequency","minsPerTask","newMinsPerTask","numEmployees",
+      "workingWeeks","salaryType","avgSalaryRate",
+      "softwareLicenseCost","numSeats","oneTimeBuildCost"
+    ].forEach(id => {
+      document.getElementById(id).addEventListener("input", () => calculateAll());
+      document.getElementById(id).addEventListener("change", () => calculateAll());
+    });
+
+    wireSlider("Repetition");
+    wireSlider("Risk");
+    wireSlider("Human");
+    wireSlider("Context");
+
+    document.getElementById("copySummaryBtn").addEventListener("click", () => {
+      const txt = buildSummaryText();
+      copyToClipboard(txt);
+    });
+
+    resetAll();
+  </script>
+</body>
+</html>
