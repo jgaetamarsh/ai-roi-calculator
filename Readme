@@ -1,0 +1,35 @@
+# AI Workflow ROI Calculator
+
+This project explores a simple way to estimate the potential return from automating workflow tasks with AI.
+
+## Problem
+
+Organizations often struggle to estimate the value of AI automation before building a system.  
+This calculator provides a simple framework to model potential savings.
+
+## Inputs
+
+- Number of tasks per day
+- Average time per task
+- Percentage of tasks that can be automated
+- Cost per hour of labor
+
+## Output
+
+Estimated:
+
+- time savings
+- cost savings
+- productivity gains
+
+## Why I Built This
+
+I work on AI-driven workflow products and often need a quick way to reason about the economic value of automation.
+
+This project is a lightweight prototype to explore those calculations.
+
+## Future Ideas
+
+- web interface
+- scenario comparisons
+- integration with workflow analytics
