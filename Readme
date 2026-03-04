@@ -1,35 +1,26 @@
-# AI Workflow ROI Calculator
+# AI Workflow Value Calculator
 
-This project explores a simple way to estimate the potential return from automating workflow tasks with AI.
+This project explores a simple framework for estimating the value of AI automation in operational workflows.
 
-## Problem
+The calculator models potential savings based on:
 
-Organizations often struggle to estimate the value of AI automation before building a system.  
-This calculator provides a simple framework to model potential savings.
+• number of tasks
+• time required per task
+• percentage that can be automated
+• labor cost
 
-## Inputs
+## Live Version
 
-- Number of tasks per day
-- Average time per task
-- Percentage of tasks that can be automated
-- Cost per hour of labor
+You can try the calculator here:
 
-## Output
-
-Estimated:
-
-- time savings
-- cost savings
-- productivity gains
+https://legalytical.com/me-or-the-machine%3F
 
 ## Why I Built This
 
-I work on AI-driven workflow products and often need a quick way to reason about the economic value of automation.
+When evaluating AI systems, organizations often struggle to quantify the value of automation. This prototype explores a simple model for estimating potential time and cost savings.
 
-This project is a lightweight prototype to explore those calculations.
+## Future Improvements
 
-## Future Ideas
-
-- web interface
-- scenario comparisons
-- integration with workflow analytics
+• scenario comparison
+• workflow benchmarking
+• integration with operational analytics
