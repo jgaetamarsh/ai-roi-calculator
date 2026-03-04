@@ -2,6 +2,8 @@
 
 This project explores a simple framework for estimating the value of AI automation in operational workflows.
 
+![Calculator Screenshot](tasks.jpg)
+
 The calculator models potential savings based on:
 
 • number of tasks
@@ -11,9 +13,9 @@ The calculator models potential savings based on:
 
 ## Live Version
 
-You can try the calculator here:
+Try the calculator here:
 
-https://legalytical.com/me-or-the-machine%3F
+👉 https://legalytical.com/me-or-the-machine%3F
 
 ## Why I Built This
 
@@ -25,8 +27,15 @@ When evaluating AI systems, organizations often struggle to quantify the value o
 • workflow benchmarking
 • integration with operational analytics
 
-# AI Workflow Value Calculator
+## Inputs
 
-![Calculator Screenshot](tasks.jpg)
+- number of tasks
+- time required per task
+- percent automatable
+- hourly labor cost
 
-This tool estimates the potential value of AI automation in operational workflows.
+## Output
+
+- estimated time saved
+- estimated cost savings
+- recommended delegation approach
