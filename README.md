@@ -21,11 +21,6 @@ Try the calculator here:
 
 When evaluating AI systems, organizations often struggle to quantify the value of automation. This prototype explores a simple model for estimating potential time and cost savings.
 
-## Future Improvements
-
-• scenario comparison
-• workflow benchmarking
-• integration with operational analytics
 
 ## Inputs
 
